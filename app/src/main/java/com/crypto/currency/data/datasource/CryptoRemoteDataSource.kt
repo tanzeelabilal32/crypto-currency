@@ -10,7 +10,7 @@ import javax.inject.Inject
 class CryptoRemoteDataSource @Inject constructor(
     private val cryptoApi: CryptoApi
 ) {
-    suspend fun fetchCryptos(page:Int, pageSize:Int): List<CryptoDomain>? {
+    suspend fun fetchCryptos(page:Int, pageSize:Int): List<CryptoDomain> {
         val response = cryptoApi.getTopCryptos(page = page, perPage = pageSize)
         if (response.isSuccessful && response.body() != null) {
             val cryptos: List<CryptoDomain> = response.body()!!.map {

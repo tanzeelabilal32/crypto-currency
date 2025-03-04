@@ -1,13 +1,31 @@
 package com.crypto.currency.presentation.ui.screen
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,9 +51,11 @@ fun CryptoListScreen(viewModel: CryptoViewModel = hiltViewModel()) {
 
     val accountBalance = remember { mutableStateOf("$11,542.21") } // Dummy value for now
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(16.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
         Text(
             text = "Top 5 Crypto Currencies",
             style = MaterialTheme.typography.headlineSmall,
@@ -82,38 +102,40 @@ fun CryptoListScreen(viewModel: CryptoViewModel = hiltViewModel()) {
         Box(modifier = Modifier.fillMaxSize()) {
             val cryptos = cryptoState.data ?: emptyList()
             when (cryptoState) {
-            is Resource.Loading -> {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            }
-            is Resource.Success -> {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(bottom = 60.dp) // Prevent overlap with the button
-                ) {
-                    items(cryptos) { crypto ->
-                        CryptoItem(crypto)
+                is Resource.Loading -> {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                }
+
+                is Resource.Success -> {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(bottom = 60.dp) // Prevent overlap with the button
+                    ) {
+                        items(cryptos) { crypto ->
+                            CryptoItem(crypto)
+                        }
+                    }
+                }
+
+                is Resource.Error -> {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = cryptoState.message ?: "Unknown error",
+                            color = Color.Red,
+                            fontSize = 16.sp,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(8.dp)
+                        )
+                        Button(onClick = { viewModel.fetchTopCryptos() }) {
+                            Text(text = "Retry")
+                        }
                     }
                 }
             }
-            is Resource.Error -> {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = cryptoState.message ?: "Unknown error",
-                        color = Color.Red,
-                        fontSize = 16.sp,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(8.dp)
-                    )
-                    Button(onClick = { viewModel.fetchTopCryptos() }) {
-                        Text(text = "Retry")
-                    }
-                }
-            }
-        }
 
             Button(
                 onClick = {
