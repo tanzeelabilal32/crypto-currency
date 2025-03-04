@@ -80,6 +80,9 @@ dependencies {
     implementation("com.squareup.moshi:moshi-kotlin:1.14.0")
     kapt("com.squareup.moshi:moshi-kotlin-codegen:1.14.0")
 
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.10.0") // Logging interceptor
+
 
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
 
