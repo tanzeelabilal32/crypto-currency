@@ -15,7 +15,7 @@ fun CryptoListScreen(viewModel: CryptoViewModel = hiltViewModel()) {
 
     LazyColumn {
         items(cryptos) { crypto ->
-            Text(text = "${crypto.name}: ${crypto.price}")
+            Text(text = "${crypto.name}: ${crypto.currentPrice}")
         }
     }
 }

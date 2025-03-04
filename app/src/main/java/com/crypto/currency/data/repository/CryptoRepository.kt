@@ -2,8 +2,8 @@ package com.crypto.currency.data.repository
 
 import com.crypto.currency.data.api.CryptoApi
 import com.crypto.currency.data.db.CryptoDao
-import com.crypto.currency.data.db.toDomain
-import com.crypto.currency.data.db.toEntity
+import com.crypto.currency.data.mapper.toDomain
+import com.crypto.currency.data.mapper.toEntity
 import com.crypto.currency.domain.model.CryptoDomain
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -18,17 +18,10 @@ class CryptoRepository @Inject constructor(
             val response = api.getTopCryptos()
             if (response.isSuccessful && response.body() != null) {
                 val cryptos: List<CryptoDomain> = response.body()!!.map {
-                    CryptoDomain(
-                        id = it.id,
-                        symbol = it.symbol,
-                        name = it.name,
-                        price = it.price,
-                        marketCap = it.marketCap,
-                        priceChange = it.priceChange
-                    )
+                    it.toDomain()
                 }
 
-                // ✅ Convert Domain Model to Database Model before inserting
+                // Convert Domain Model to Database Model before inserting
                 dao.insertAll(cryptos.map { it.toEntity() })
 
                 return@withContext cryptos
@@ -37,7 +30,7 @@ class CryptoRepository @Inject constructor(
             e.printStackTrace()
         }
 
-        // ✅ Convert Database Model to Domain Model before returning
+        //  Convert Database Model to Domain Model before returning
         return@withContext dao.getTopCryptos().map { it.toDomain() }
     }
 }
