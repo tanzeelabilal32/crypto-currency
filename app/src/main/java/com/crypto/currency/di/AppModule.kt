@@ -60,7 +60,7 @@ object AppModule {
     fun provideRetrofit(okHttpClient: OkHttpClient, moshi: Moshi): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .addConverterFactory(MoshiConverterFactory.create()) // Use Moshi for JSON parsing
+            .addConverterFactory(MoshiConverterFactory.create(moshi)) // Use Moshi for JSON parsing
             .client(okHttpClient) // Attach OkHttpClient
             .build()
     }

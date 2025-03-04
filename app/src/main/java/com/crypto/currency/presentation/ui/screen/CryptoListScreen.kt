@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,13 +21,21 @@ import coil.compose.rememberAsyncImagePainter
 import com.crypto.currency.domain.model.CryptoDomain
 import com.crypto.currency.presentation.viewmodel.CryptoViewModel
 import com.crypto.currency.utils.Resource
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 @Composable
 fun CryptoListScreen(viewModel: CryptoViewModel = hiltViewModel()) {
     val cryptoState by viewModel.cryptoState.collectAsState()
+    val coroutineScope = rememberCoroutineScope() // Needed for smooth scrolling
+    val scrollState = rememberLazyListState()
 
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+    val accountBalance = remember { mutableStateOf("$11,542.21") } // Dummy value for now
+
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(16.dp)) {
         Text(
             text = "Top 5 Crypto Currencies",
             style = MaterialTheme.typography.headlineSmall,
@@ -34,14 +43,54 @@ fun CryptoListScreen(viewModel: CryptoViewModel = hiltViewModel()) {
         )
 
         Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "Account Value",
+            fontSize = 14.sp,
+            color = Color.Gray
+        )
+        Spacer(modifier = Modifier.height(8.dp))
 
-        when (cryptoState) {
+        Text(
+            text = accountBalance.value,
+            fontSize = 32.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Buttons (Send & Receive)
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Button(
+                onClick = { /* Handle Send */ },
+                colors = ButtonDefaults.buttonColors(Color.Black),
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(text = "↑ Send", color = Color.White)
+            }
+            Button(
+                onClick = { /* Handle Receive */ },
+                colors = ButtonDefaults.buttonColors(Color.Black),
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(text = "↓ Receive", color = Color.White)
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        Box(modifier = Modifier.fillMaxSize()) {
+            val cryptos = cryptoState.data ?: emptyList()
+            when (cryptoState) {
             is Resource.Loading -> {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
             is Resource.Success -> {
-                val cryptos = cryptoState.data ?: emptyList()
-                LazyColumn {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(bottom = 60.dp) // Prevent overlap with the button
+                ) {
                     items(cryptos) { crypto ->
                         CryptoItem(crypto)
                     }
@@ -63,6 +112,24 @@ fun CryptoListScreen(viewModel: CryptoViewModel = hiltViewModel()) {
                         Text(text = "Retry")
                     }
                 }
+            }
+        }
+
+            Button(
+                onClick = {
+                    viewModel.loadNextPage()
+                    //TODO: Fix the scroll
+                    coroutineScope.launch {
+                        delay(300) // Allow time for new items to be added
+                        scrollState.animateScrollToItem(cryptos.size.minus(1)) // Scroll to last item
+                    }
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(16.dp)
+                    .fillMaxWidth()
+            ) {
+                Text(text = "Load More")
             }
         }
     }

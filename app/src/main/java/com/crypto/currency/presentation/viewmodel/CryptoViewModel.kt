@@ -20,15 +20,33 @@ class CryptoViewModel @Inject constructor(
     private val _cryptoState = MutableStateFlow<Resource<List<CryptoDomain>>>(Resource.Loading())
     val cryptoState: StateFlow<Resource<List<CryptoDomain>>> get() = _cryptoState
 
+    private var currentPage = 1
+    private val pageSize = 5
+    private var isLoading = false
+
     init {
         fetchTopCryptos()
     }
 
     fun fetchTopCryptos() {
+        if (isLoading) return // Prevent multiple calls
+
         viewModelScope.launch {
-           var t =  getTopCryptosUseCase.invoke().collectLatest { result ->
-                _cryptoState.value = result
+            isLoading = true
+            getTopCryptosUseCase.invoke(currentPage, pageSize).collectLatest { result ->
+                val existingData = _cryptoState.value.data ?: emptyList()
+                if(existingData.isNotEmpty())
+                    _cryptoState.value = Resource.Success(existingData + (result.data ?: emptyList()))
+                else
+                    _cryptoState.value = result
+
+                isLoading = false
             }
         }
+    }
+
+    fun loadNextPage() {
+        currentPage++
+        fetchTopCryptos()
     }
 }
