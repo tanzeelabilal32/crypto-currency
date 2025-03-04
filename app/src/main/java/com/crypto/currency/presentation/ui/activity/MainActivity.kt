@@ -1,4 +1,4 @@
-package com.crypto.currency
+package com.crypto.currency.presentation.ui.activity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

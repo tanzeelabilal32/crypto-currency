@@ -87,6 +87,7 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.50")
 
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation("io.coil-kt:coil-compose:2.2.2")
 
 
     testImplementation("junit:junit:4.13.2")
