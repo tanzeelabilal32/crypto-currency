@@ -150,6 +150,7 @@ fun CryptoListScreen(navController: NavController, viewModel: CryptoViewModel = 
                         scrollState.animateScrollToItem(cryptos.size.minus(1)) // Scroll to last item
                     }
                 },
+                colors = ButtonDefaults.buttonColors(Color.Black),
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(16.dp)
