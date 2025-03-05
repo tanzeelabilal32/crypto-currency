@@ -12,4 +12,8 @@ interface CryptoDao {
 
     @Query("SELECT * FROM cryptos ORDER BY marketCap DESC")
     suspend fun getTopCryptos(): List<CryptoEntity>
+
+    @Query("SELECT * FROM cryptos WHERE id = :cryptoId")
+    suspend fun getCryptoById(cryptoId: String): CryptoEntity
+
 }

@@ -15,4 +15,8 @@ class CryptoLocalDataSource @Inject constructor(private val cryptoDao: CryptoDao
     suspend fun getCachedCryptos(): List<CryptoDomain> {
         return cryptoDao.getTopCryptos().map { it.toDomain() }
     }
+
+    suspend fun getCryptoById(cryptoId: String): CryptoDomain {
+        return cryptoDao.getCryptoById(cryptoId).toDomain()
+    }
 }

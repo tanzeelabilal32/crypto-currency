@@ -1,6 +1,7 @@
 package com.crypto.currency.presentation.ui.screen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,6 +36,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.crypto.currency.domain.model.CryptoDomain
 import com.crypto.currency.presentation.viewmodel.CryptoViewModel
@@ -44,7 +46,7 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun CryptoListScreen(viewModel: CryptoViewModel = hiltViewModel()) {
+fun CryptoListScreen(navController: NavController, viewModel: CryptoViewModel = hiltViewModel()) {
     val cryptoState by viewModel.cryptoState.collectAsState()
     val coroutineScope = rememberCoroutineScope() // Needed for smooth scrolling
     val scrollState = rememberLazyListState()
@@ -113,7 +115,9 @@ fun CryptoListScreen(viewModel: CryptoViewModel = hiltViewModel()) {
                             .padding(bottom = 60.dp) // Prevent overlap with the button
                     ) {
                         items(cryptos) { crypto ->
-                            CryptoItem(crypto)
+                            CryptoItem(crypto){
+                                navController.navigate("crypto_detail/${crypto.id}")
+                            }
                         }
                     }
                 }
@@ -159,10 +163,11 @@ fun CryptoListScreen(viewModel: CryptoViewModel = hiltViewModel()) {
 
 
 @Composable
-fun CryptoItem(crypto: CryptoDomain) {
+fun CryptoItem(crypto: CryptoDomain,onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable { onClick() }
             .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
