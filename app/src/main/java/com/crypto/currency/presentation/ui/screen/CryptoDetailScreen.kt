@@ -41,6 +41,7 @@ import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.text.style.TextAlign
 import com.crypto.currency.presentation.ui.component.CryptoPriceChart
 import com.crypto.currency.presentation.ui.theme.CryptoTypography
+import com.crypto.currency.presentation.ui.theme.GreenInchWorm
 
 
 @Composable
@@ -133,10 +134,10 @@ fun CryptoDetailContent(navController: NavController, crypto: CryptoDomain) {
                     )
 
                     Text(
-                        text = "${crypto.priceChangePercentage24h}%   ${crypto.priceChange24h}",
+                        text = "${"%.4f".format(crypto.priceChangePercentage24h)}%   $${"%.4f".format(crypto.priceChange24h)}",
                         style = CryptoTypography.bodySmall,
-                        fontWeight = FontWeight.Light,
-                        color = if (crypto.priceChange24h > 0) Color.Green else Color.Red
+                        fontWeight = FontWeight.Normal,
+                        color = if (crypto.priceChange24h > 0) GreenInchWorm else Color.Red
                     )
                 }
 
@@ -185,7 +186,7 @@ fun CryptoDetailContent(navController: NavController, crypto: CryptoDomain) {
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
-                        text = "$${crypto.priceChange24h}",
+                        text = "$${"%.4f".format(crypto.priceChange24h)}",
                         style = CryptoTypography.bodySmall,
                         color = Color.Gray
                     )

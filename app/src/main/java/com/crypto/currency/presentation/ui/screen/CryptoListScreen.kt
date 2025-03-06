@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -42,6 +43,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.crypto.currency.domain.model.CryptoDomain
+import com.crypto.currency.presentation.ui.component.drawVerticalScrollbar
 import com.crypto.currency.presentation.ui.theme.CryptoTypography
 import com.crypto.currency.presentation.viewmodel.CryptoViewModel
 import com.crypto.currency.utils.Resource
@@ -113,6 +115,7 @@ fun CryptoListScreen(navController: NavController, viewModel: CryptoViewModel = 
         }
 
         Spacer(modifier = Modifier.height(16.dp))
+
         Box(modifier = Modifier.fillMaxSize()) {
             val cryptos = cryptoState.data ?: emptyList()
             when (cryptoState) {
@@ -123,8 +126,8 @@ fun CryptoListScreen(navController: NavController, viewModel: CryptoViewModel = 
                 is Resource.Success -> {
                     Spacer(modifier = Modifier.height(16.dp))
                     LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
+                        state = scrollState,
+                        modifier = Modifier.drawVerticalScrollbar(scrollState)
                             .padding(bottom = 60.dp) // Prevent overlap with the button
                     ) {
                         items(cryptos) { crypto ->

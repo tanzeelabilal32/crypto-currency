@@ -12,3 +12,5 @@ val Pink40 = Color(0xFF7D5260)
 
 val OrangePrimary = Color(0xFFFF9800) // Orange theme
 val LightGrayBackground = Color(0xFFF8F8F8)
+
+val GreenInchWorm = Color(0xFF88E788)

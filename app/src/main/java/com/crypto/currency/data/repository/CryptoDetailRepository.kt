@@ -6,6 +6,7 @@ import com.crypto.currency.utils.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
@@ -21,6 +22,12 @@ class CryptoDetailRepository @Inject constructor(
                 emit(Resource.Success(localCrypto))
             }
 
+        } catch (e: HttpException) {
+            when (e.code()) {
+                429 -> emit(Resource.Error("Rate limit exceeded. Try again later.")) // API limit exceeded
+                500 -> emit(Resource.Error("Server error. Please try again.")) // Server issue
+                else -> emit(Resource.Error("Unknown error: ${e.message()}")) // Other HTTP errors
+            }
         } catch (e: IOException) {
             emit(Resource.Error("No internet connection. Please check your network."))
         } catch (e: Exception) {
