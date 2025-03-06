@@ -1,10 +1,27 @@
+import me.moallemi.gradle.advancedbuildversion.gradleextensions.VersionCodeType
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt") // ✅ Correct plugin ID
+    id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
+    id("me.moallemi.advanced-build-version")
 }
 
+advancedVersioning {
+    codeOptions {
+        versionCodeType(VersionCodeType.GIT_COMMIT_COUNT)
+    }
+    nameOptions {
+        versionMajor(1)
+        versionMinor(0)
+        versionPatch(1)
+    }
+    outputOptions {
+        renameOutput(true)
+        nameFormat("Crypto-${'$'}{versionName}-${'$'}{versionCode}") //  Use `${'$'}` to escape `$`
+    }
+}
 
 android {
     namespace = "com.crypto.currency"
@@ -14,8 +31,8 @@ android {
         applicationId = "com.crypto.currency"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
