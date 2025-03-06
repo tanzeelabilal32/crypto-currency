@@ -35,6 +35,7 @@ class CryptoViewModelTest {
     private lateinit var getTopCryptosUseCase: GetTopCryptosUseCase
 
     private lateinit var viewModel: CryptoViewModel
+
     private val testDispatcher = StandardTestDispatcher()
 
     @Before
