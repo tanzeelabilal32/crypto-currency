@@ -38,6 +38,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.ui.graphics.Color.Companion.LightGray
+import androidx.compose.ui.text.style.TextAlign
 import com.crypto.currency.presentation.ui.component.CryptoPriceChart
 import com.crypto.currency.presentation.ui.theme.CryptoTypography
 
@@ -100,7 +101,7 @@ fun CryptoDetailContent(navController: NavController, crypto: CryptoDomain) {
             // Top Bar
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(onClick = { navController.popBackStack() }) {
                     Icon(
@@ -110,28 +111,42 @@ fun CryptoDetailContent(navController: NavController, crypto: CryptoDomain) {
                 }
                 Text(
                     text = crypto.name,
-                    style = CryptoTypography.bodyMedium
+                    modifier = Modifier.weight(1f),
+                    textAlign = TextAlign.Center,
+                    style = CryptoTypography.bodyMedium,
+                    fontSize = 18.sp
                 )
-                AsyncImage(
-                    model = crypto.image,
-                    contentDescription = null,
-                    modifier = Modifier.size(40.dp)
-                )
+
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             // Current Price & Change
-            Text(
-                text = "$${crypto.currentPrice}",
-                style = CryptoTypography.displayLarge
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = "$${crypto.currentPrice}",
+                        style = CryptoTypography.displayLarge
+                    )
+
+                    Text(
+                        text = "${crypto.priceChangePercentage24h}%   ${crypto.priceChange24h}",
+                        style = CryptoTypography.bodySmall,
+                        fontWeight = FontWeight.Light,
+                        color = if (crypto.priceChange24h > 0) Color.Green else Color.Red
+                    )
+                }
+
+
+            AsyncImage(
+                model = crypto.image,
+                contentDescription = null,
+                modifier = Modifier.size(60.dp)
             )
-            Text(
-                text = "${crypto.priceChangePercentage24h}%   ${crypto.priceChange24h}",
-                style = CryptoTypography.bodySmall,
-                fontWeight = FontWeight.Light,
-                color = if (crypto.priceChange24h > 0) Color.Green else Color.Red
-            )
+        }
 
             Spacer(modifier = Modifier.height(32.dp))
 
