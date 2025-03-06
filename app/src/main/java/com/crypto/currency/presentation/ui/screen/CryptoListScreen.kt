@@ -22,6 +22,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,6 +48,10 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun CryptoListScreen(navController: NavController, viewModel: CryptoViewModel = hiltViewModel()) {
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchTopCryptos() // Call inside LaunchedEffect
+    }
     val cryptoState by viewModel.cryptoState.collectAsState()
     val coroutineScope = rememberCoroutineScope() // Needed for smooth scrolling
     val scrollState = rememberLazyListState()

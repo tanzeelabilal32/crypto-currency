@@ -3,8 +3,12 @@ package com.crypto.currency.di
 import android.content.Context
 import androidx.room.Room
 import com.crypto.currency.data.api.CryptoApi
+import com.crypto.currency.data.datasource.CryptoLocalDataSource
+import com.crypto.currency.data.datasource.CryptoRemoteDataSource
 import com.crypto.currency.data.db.CryptoDao
 import com.crypto.currency.data.db.CryptoDatabase
+import com.crypto.currency.data.repository.CryptoDetailRepository
+import com.crypto.currency.data.repository.CryptoRepository
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -86,5 +90,32 @@ object AppModule {
     @Singleton
     fun provideCryptoDao(database: CryptoDatabase): CryptoDao {
         return database.cryptoDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRemoteDataSource(api: CryptoApi): CryptoRemoteDataSource {
+        return CryptoRemoteDataSource(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLocalDataSource(database: CryptoDatabase): CryptoLocalDataSource {
+        return CryptoLocalDataSource(database.cryptoDao())
+    }
+
+    @Provides
+    @Singleton
+    fun provideCryptoRepository(
+        remoteDataSource: CryptoRemoteDataSource,
+        localDataSource: CryptoLocalDataSource
+    ): CryptoRepository {
+        return CryptoRepository(remoteDataSource, localDataSource)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCryptoDetailRepository(localDataSource: CryptoLocalDataSource): CryptoDetailRepository {
+        return CryptoDetailRepository(localDataSource)
     }
 }

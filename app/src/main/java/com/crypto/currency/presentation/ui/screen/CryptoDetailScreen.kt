@@ -118,7 +118,7 @@ fun CryptoDetailContent(navController: NavController, crypto: CryptoDomain) {
             )
             Text(
                 text = "${crypto.priceChangePercentage24h}% ${crypto.priceChange24h}",
-                style = CryptoTypography.bodyLarge,
+                style = CryptoTypography.bodySmall,
                 color = if (crypto.priceChange24h > 0) Color.Green else Color.Red
             )
 

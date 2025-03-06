@@ -9,7 +9,7 @@ import javax.inject.Inject
 class GetTopCryptosUseCase @Inject constructor(
     private val repository: CryptoRepository
 ) {
-    operator fun invoke(page: Int, pageSize: Int): Flow<Resource<List<CryptoDomain>>> {
+    suspend operator fun invoke(page: Int, pageSize: Int): Flow<Resource<List<CryptoDomain>>> {
         return repository.getTopCryptos(page, pageSize)
     }
 }

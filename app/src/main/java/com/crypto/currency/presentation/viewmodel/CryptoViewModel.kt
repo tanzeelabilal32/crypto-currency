@@ -24,10 +24,6 @@ class CryptoViewModel @Inject constructor(
     private val pageSize = 5
     private var isLoading = false
 
-    init {
-        fetchTopCryptos()
-    }
-
     fun fetchTopCryptos() {
         if (isLoading) return // Prevent multiple calls
 

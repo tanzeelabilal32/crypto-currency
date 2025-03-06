@@ -13,7 +13,7 @@ class CryptoRepository @Inject constructor(
     private val remoteDataSource: CryptoRemoteDataSource,
     private val localDataSource: CryptoLocalDataSource
 ) {
-    fun getTopCryptos(page: Int, pageSize: Int): Flow<Resource<List<CryptoDomain>>> = flow {
+    suspend fun getTopCryptos(page: Int, pageSize: Int): Flow<Resource<List<CryptoDomain>>> = flow {
         emit(Resource.Loading()) // Show loading state
         try {
             val apiCryptos = remoteDataSource.fetchCryptos(page, pageSize)
