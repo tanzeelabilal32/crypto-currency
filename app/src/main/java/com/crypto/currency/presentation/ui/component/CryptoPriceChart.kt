@@ -5,60 +5,68 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
 
 @Composable
 fun CryptoPriceChart(
-    priceData: List<Float>,
+    chartData: List<Float>,
     modifier: Modifier = Modifier
 ) {
-    if (priceData.isEmpty()) return
 
-    Canvas(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(200.dp)
-            .padding(horizontal = 16.dp)
-    ) {
-        val spacing = size.width / (priceData.size - 1)
-        val maxPrice = priceData.maxOrNull() ?: 0f
-        val minPrice = priceData.minOrNull() ?: 0f
-        val priceRange = maxPrice - minPrice
+    Box(modifier = modifier.fillMaxSize()) {
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            val path = Path()
+            val width = size.width
+            val height = size.height
 
-        val path = Path().apply {
-            val firstX = 0f
-            val firstY = size.height - ((priceData[0] - minPrice) / priceRange) * size.height
-            moveTo(firstX, firstY)
+            if (chartData.isNotEmpty()) {
+                val minY = chartData.minOrNull() ?: 0f
+                val maxY = chartData.maxOrNull() ?: 1f
 
-            priceData.forEachIndexed { index, price ->
-                val x = index * spacing
-                val y = size.height - ((price - minPrice) / priceRange) * size.height
-                lineTo(x, y)
+                val xStep = width / (chartData.size - 1).coerceAtLeast(1)
+                val yScale = height / (maxY - minY).coerceAtLeast(1f)
+
+                // Move to the first point
+                path.moveTo(0f, height - ((chartData[0] - minY) * yScale))
+
+                // Draw the line
+                chartData.forEachIndexed { index, value ->
+                    val x = index * xStep
+                    val y = height - ((value - minY) * yScale)
+                    path.lineTo(x, y)
+                }
+
+                // Close the path for gradient fill (fill under line)
+                path.lineTo(width, height)
+                path.lineTo(0f, height)
+                path.close()
             }
-        }
 
-        // Draw the main price line
-        drawPath(
-            path = path,
-            color = Color(0xFFFFA500), // Orange color for graph
-            style = Stroke(width = 2.dp.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round)
-        )
-
-        // Draw a dotted path effect (if needed)
-        drawPath(
-            path = path,
-            color = Color(0xFFFFA500),
-            style = Stroke(
-                width = 2.dp.toPx(),
-                pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
+            // Draw gradient fill
+            drawPath(
+                path = path,
+                brush = Brush.verticalGradient(
+                    colors = listOf(Color(0x55FFA726), Color.Transparent) // Orange gradient
+                ),
+                style = Fill
             )
-        )
+
+            // Draw the line
+            drawPath(
+                path = path,
+                color = Color(0xFFFF9800), // Orange line
+                style = Stroke(width = 5f, cap = StrokeCap.Round)
+            )
+        }
     }
 }
+

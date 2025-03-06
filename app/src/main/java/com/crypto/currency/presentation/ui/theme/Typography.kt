@@ -37,6 +37,11 @@ val CryptoTypography = Typography(
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp
     ),
+    bodySmall = TextStyle(
+        fontFamily = SpaceGrotesk,
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp
+    ),
     labelLarge = TextStyle(
         fontFamily = SpaceGrotesk,
         fontWeight = FontWeight.Bold,

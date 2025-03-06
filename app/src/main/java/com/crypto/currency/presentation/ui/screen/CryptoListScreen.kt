@@ -28,6 +28,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,6 +42,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.crypto.currency.domain.model.CryptoDomain
+import com.crypto.currency.presentation.ui.theme.CryptoTypography
 import com.crypto.currency.presentation.viewmodel.CryptoViewModel
 import com.crypto.currency.utils.Resource
 import kotlinx.coroutines.delay
@@ -49,9 +52,15 @@ import kotlinx.coroutines.launch
 @Composable
 fun CryptoListScreen(navController: NavController, viewModel: CryptoViewModel = hiltViewModel()) {
 
+    var isLoaded by rememberSaveable { mutableStateOf(false) } // Remember across recompositions
+
     LaunchedEffect(Unit) {
-        viewModel.fetchTopCryptos() // Call inside LaunchedEffect
+        if (!isLoaded) {
+            viewModel.fetchTopCryptos() // Fetch only the first time
+            isLoaded = true // Prevents re-fetching on back press
+        }
     }
+
     val cryptoState by viewModel.cryptoState.collectAsState()
     val coroutineScope = rememberCoroutineScope() // Needed for smooth scrolling
     val scrollState = rememberLazyListState()
@@ -64,23 +73,21 @@ fun CryptoListScreen(navController: NavController, viewModel: CryptoViewModel = 
             .padding(16.dp)
     ) {
         Text(
-            text = "Top 5 Crypto Currencies",
-            style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Bold
+            text = "Crypto",
+            style = CryptoTypography.displayMedium
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(16.dp))
+
         Text(
             text = "Account Value",
-            fontSize = 14.sp,
-            color = Color.Gray
+            style = CryptoTypography.bodySmall
         )
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
             text = accountBalance.value,
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
+            style = CryptoTypography.displayLarge,
             color = Color.Black
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -94,14 +101,14 @@ fun CryptoListScreen(navController: NavController, viewModel: CryptoViewModel = 
                 colors = ButtonDefaults.buttonColors(Color.Black),
                 modifier = Modifier.weight(1f)
             ) {
-                Text(text = "↑ Send", color = Color.White)
+                Text(text = "↑ Send", color = Color.White, fontSize = 12.sp, style = CryptoTypography.bodySmall)
             }
             Button(
                 onClick = { /* Handle Receive */ },
                 colors = ButtonDefaults.buttonColors(Color.Black),
                 modifier = Modifier.weight(1f)
             ) {
-                Text(text = "↓ Receive", color = Color.White)
+                Text(text = "↓ Receive", color = Color.White, fontSize = 12.sp, style = CryptoTypography.bodySmall)
             }
         }
 
@@ -114,6 +121,7 @@ fun CryptoListScreen(navController: NavController, viewModel: CryptoViewModel = 
                 }
 
                 is Resource.Success -> {
+                    Spacer(modifier = Modifier.height(16.dp))
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
@@ -189,15 +197,17 @@ fun CryptoItem(crypto: CryptoDomain,onClick: () -> Unit) {
 
         // Name and price details
         Column(modifier = Modifier.weight(1f)) {
-            Text(text = crypto.name, fontWeight = FontWeight.Bold)
-            Text(text = "$${crypto.currentPrice}", fontSize = 12.sp, color = Color.Gray)
+            Text(text = crypto.name, style = CryptoTypography.bodyLarge, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+            Text(text = "$${crypto.currentPrice}",style = CryptoTypography.bodyMedium)
         }
 
         // Amount
         Text(
             text = "${crypto.currentPrice} ${crypto.symbol.uppercase()}",
-            fontSize = 14.sp,
+            style = CryptoTypography.bodyMedium,
             textAlign = TextAlign.End
         )
     }
+    Spacer(modifier = Modifier.height(16.dp))
+
 }

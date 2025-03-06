@@ -30,7 +30,10 @@ import com.crypto.currency.presentation.viewmodel.CryptoDetailViewModel
 import com.crypto.currency.utils.Resource
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -47,27 +50,34 @@ fun CryptoDetailScreen(
 ) {
     val cryptoDetailState by viewModel.cryptoDetailState.collectAsState()
 
+    val scrollState = rememberScrollState()
+
+    //fetch item details from DB
     LaunchedEffect(cryptoId) {
         viewModel.fetchCryptoDetail(cryptoId)
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        when (cryptoDetailState) {
-            is Resource.Loading -> CircularProgressIndicator(
-                modifier = Modifier.align(
-                    Alignment.Center
+    Column(modifier = Modifier
+        .fillMaxHeight()
+        .verticalScroll(scrollState)) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            when (cryptoDetailState) {
+                is Resource.Loading -> CircularProgressIndicator(
+                    modifier = Modifier.align(
+                        Alignment.Center
+                    )
                 )
-            )
 
-            is Resource.Error -> Text(
-                text = cryptoDetailState.message ?: "Unknown Error",
-                color = Color.Red,
-                modifier = Modifier.align(Alignment.Center)
-            )
+                is Resource.Error -> Text(
+                    text = cryptoDetailState.message ?: "Unknown Error",
+                    color = Color.Red,
+                    modifier = Modifier.align(Alignment.Center)
+                )
 
-            is Resource.Success -> {
-                cryptoDetailState.data?.let { crypto ->
-                    CryptoDetailContent(navController, crypto)
+                is Resource.Success -> {
+                    cryptoDetailState.data?.let { crypto ->
+                        CryptoDetailContent(navController, crypto)
+                    }
                 }
             }
         }
@@ -100,7 +110,7 @@ fun CryptoDetailContent(navController: NavController, crypto: CryptoDomain) {
                 }
                 Text(
                     text = crypto.name,
-                    style = CryptoTypography.displayLarge
+                    style = CryptoTypography.bodyMedium
                 )
                 AsyncImage(
                     model = crypto.image,
@@ -117,16 +127,17 @@ fun CryptoDetailContent(navController: NavController, crypto: CryptoDomain) {
                 style = CryptoTypography.displayLarge
             )
             Text(
-                text = "${crypto.priceChangePercentage24h}% ${crypto.priceChange24h}",
+                text = "${crypto.priceChangePercentage24h}%   ${crypto.priceChange24h}",
                 style = CryptoTypography.bodySmall,
+                fontWeight = FontWeight.Light,
                 color = if (crypto.priceChange24h > 0) Color.Green else Color.Red
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
             //dummy Graph
             CryptoPriceChart(
-                priceData = priceHistory,
+                chartData = priceHistory,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
@@ -142,20 +153,24 @@ fun CryptoDetailContent(navController: NavController, crypto: CryptoDomain) {
                 colors = CardDefaults.cardColors(containerColor = Color.White)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
+
                     Text(
                         text = "Account Value",
                         style = CryptoTypography.bodySmall,
                         color = Color.Gray
                     )
                     Spacer(modifier = Modifier.height(8.dp))
+
                     Text(
-                        text = "${crypto.currentPrice} ${crypto.symbol.uppercase()}",
+                        text = "${crypto.priceChangePercentage24h}  ${crypto.symbol.uppercase()}",
                         style = CryptoTypography.displayLarge,
                         fontWeight = FontWeight.Bold
                     )
+
                     Spacer(modifier = Modifier.height(8.dp))
+
                     Text(
-                        text = "$${crypto.symbol}",
+                        text = "$${crypto.priceChange24h}",
                         style = CryptoTypography.bodySmall,
                         color = Color.Gray
                     )
@@ -165,7 +180,9 @@ fun CryptoDetailContent(navController: NavController, crypto: CryptoDomain) {
             Spacer(modifier = Modifier.height(16.dp))
 
             // Recent Transactions List
-            Text(text = "Latest Activities", fontSize = 18.sp, fontWeight = FontWeight.Bold, style = CryptoTypography.displayMedium)
+            Text(text = "LATEST ACTIVITIES", style = CryptoTypography.bodyMedium, color = Color.Gray, fontSize = 14.sp)
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             Column {
                 listOf(
