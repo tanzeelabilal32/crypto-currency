@@ -10,13 +10,13 @@ An Android application built with Kotlin that displays the latest cryptocurrency
 - Displays crypto names, prices, market caps, and trends
 - Graph populated with dummy data
 - Advanced Versioning using Moallemi Library that uses auto version code on Git Commit
-- Dark mode and Orientation changes handled
 - Caching mechanism: Stores API responses in Room Database for offline access
 - Error handling for network failures & API issues
 - Pagination support for listing more cryptocurrencies
 - Unit tests for ViewModel, Repository, and UseCases
 - Uses Jetpack Components (ViewModel, LiveData, Flow)
 - MVVM Architecture for clean and scalable codebase
+- Dark mode and Orientation changes handled
 
 ---
 
