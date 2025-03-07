@@ -1,37 +1,39 @@
 # **CryptoCurrencyRates - Android App**
 
-A modern **Android application** built with **Kotlin** that displays the latest cryptocurrency prices. This app fetches **real-time crypto data** using a public API and follows best practices like **MVVM architecture, Coroutines, Flow, Room Database, and Jetpack Compose**.
+An Android application built with Kotlin that displays the latest cryptocurrency prices. This app fetches real-time crypto data using a public API and follows best practices like MVVM architecture, Coroutines, Flow, Room Database, and Jetpack Compose.
 
 ---
 
-## **🚀 Features**
+## ** Features**
 
-- ✅ Fetches **real-time cryptocurrency prices** using Retrofit & Moshi
-- ✅ Displays **crypto names, prices, market caps, and trends**
-- ✅ **Caching mechanism**: Stores API responses in **Room Database** for offline access
-- ✅ **Error handling** for network failures & API issues
-- ✅ **Pagination support** for listing more cryptocurrencies
-- ✅ **Unit tests** for ViewModel, Repository, and UseCases
-- ✅ Uses **Jetpack Components (ViewModel, LiveData, Flow)**
-- ✅ **MVVM Architecture** for clean and scalable codebase
-
----
-
-## **📦 Tech Stack**
-
-| Category         | Libraries & Tools             |
-| ---------------- | ----------------------------- |
-| **Language**     | Kotlin                        |
-| **Architecture** | MVVM                          |
-| **UI**           | Jetpack Compose / XML Layouts |
-| **Network**      | Retrofit + Moshi              |
-| **Storage**      | Room Database (for caching)   |
-| **Concurrency**  | Coroutines + Flow             |
-| **Testing**      | JUnit, Mockito, Turbine       |
+- Fetches real-time cryptocurrency prices using Retrofit & Moshi
+- Displays crypto names, prices, market caps, and trends
+- Graph populated with dummy data
+- Dark mode and Orientation changes handled
+- Caching mechanism: Stores API responses in Room Database for offline access
+- Error handling for network failures & API issues
+- Pagination support for listing more cryptocurrencies
+- Unit tests for ViewModel, Repository, and UseCases
+- Uses Jetpack Components (ViewModel, LiveData, Flow)
+- MVVM Architecture for clean and scalable codebase
 
 ---
 
-## **🔧 Setup & Installation**
+## **Tech Stack**
+
+| Category     | Libraries & Tools             |
+| ------------ | ----------------------------- |
+| Language     | Kotlin                        |
+| Architecture | MVVM                          |
+| UI           | Jetpack Compose / XML Layouts |
+| Network      | Retrofit + Moshi              |
+| Storage      | Room Database (for caching)   |
+| Concurrency  | Coroutines + Flow             |
+| Testing      | JUnit, Mockito, Turbine       |
+
+---
+
+## **Setup & Installation**
 
 ### **1️⃣ Prerequisites**
 
@@ -42,7 +44,7 @@ A modern **Android application** built with **Kotlin** that displays the latest 
 ### **2️⃣ Clone the Repository**
 
 ```bash
-git clone https://github.com/your-repository-name.git
+git clone https://github.com/tanzeelabilal32/crypto-currency.git
 cd CryptoCurrencyRates
 ```
 
@@ -54,20 +56,17 @@ cd CryptoCurrencyRates
 
 ### **4️⃣ API Key Setup**
 
-- Register on **CoinGecko / CoinMarketCap** for API access.
-- Add your **API key** inside `local.properties`:
-  ```
-  API_KEY="your_api_key_here"
-  ```
-- Modify the API base URL inside `ApiService.kt`:
+- Register on CoinGecko for API access.
+- Public API is being utilized
+- Modify the API base URL inside `AppModule.kt`:
   ```kotlin
   const val BASE_URL = "https://api.coingecko.com/api/v3/"
   ```
 
 ### **5️⃣ Build & Run**
 
-- Click **Run ▶️** in Android Studio.
-- Install & run on a **physical device** or **Android emulator**.
+- Click Run ▶️ in Android Studio.
+- Install & run on a physical device or Android emulator.
 
 ---
 
@@ -92,7 +91,7 @@ cd CryptoCurrencyRates
 
 ---
 
-## **✅ Unit Testing**
+## **Unit Testing**
 
 Unit tests are written using:
 
@@ -108,7 +107,7 @@ Unit tests are written using:
 
 ---
 
-## **❌ Error Handling**
+## **Error Handling**
 
 | Error Type     | Message Displayed                           |
 | -------------- | ------------------------------------------- |
@@ -118,22 +117,12 @@ Unit tests are written using:
 
 ---
 
-## **🔮 Future Enhancements**
+## **Future Enhancements**
 
-- 📊 **Add Graphs for Crypto Trends** (MPAndroidChart)
-- 🛑 **Dark Mode Support**
-- 📱 **More Coins & Sorting Features**
-- 🌍 **Multi-language Support**
-
----
-
-## **📜 License**
-
-This project is **open-source** under the **MIT License**.
+- Add Graphs for Crypto Trends (MPAndroidChart)
+- Fix scroll on first screen
+- More Coins & Sorting Features
+- Multi-language Support
 
 ---
-
-### **🚀 Start Tracking Crypto Prices Now! 💰📊**
-
-Feel free to contribute & improve this project! 😊
 
